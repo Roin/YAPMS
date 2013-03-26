@@ -5,3 +5,5 @@ Pattern:
 maze(MazeList,Start,Result).
 A sample query would be:
 maze([[1,1,0,1,1],[1,0,0,1,1],[1,1,0,5,1]],[1,3],X). 
+
+Vielleicht können wir auch sagen Start ist durch ein S definiert ich mag das mit den Koordinaten nicht so sehr.
