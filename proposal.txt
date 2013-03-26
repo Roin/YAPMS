@@ -7,3 +7,5 @@ A sample query would be:
 maze([[1,1,0,1,1],[1,0,0,1,1],[1,1,0,5,1]],[1,3],X). 
 
 Vielleicht können wir auch sagen Start ist durch ein S definiert ich mag das mit den Koordinaten nicht so sehr.
+Wir brauchen ein Prädikat zum starten (maze), ein Prädikat zum suchen (search), eins zum stepen (north, east, west, south oder sowas in der Art), wir sollten auch versuchen
+die Listen wie Zellen zu betrachten, ich glaube das macht es etwas einfacher die logik nach zu vollziehen. Ich mach da am Wochenende was, oder zumindest versuchs ich!
