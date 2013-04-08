@@ -35,8 +35,8 @@ results(X,[Head|Rest]) :- X = Head ; results(X,Rest).
 %accessible predicate that finds all empty accessible cells and then list each of them
 accessible(Maze, (StartRow,StartColumn), X) :- findaccessible(Maze, (StartRow,StartColumn), Lst, []), !, results(X,Lst).
 
-%sample test run
 %accessible([[0, 0, 0, 1, 0], [0, 1, 1, 1, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0]], (1, 1), X).
+%sample test run
 %
 %Lets check if we can make this work :-)
 travel(A,A).
