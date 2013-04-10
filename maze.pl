@@ -1,4 +1,4 @@
-start(a).
+:start(a).
 finish(q).
 route(a,d).
 route(d,i).

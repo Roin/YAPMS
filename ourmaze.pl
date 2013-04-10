@@ -1,5 +1,5 @@
 % maze([[0, 0, 0, 1, 0], [0, 1, 1, 1, 0], [0, 0, 1, 0 , 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0]], (1, 1), (5, 3), X).
-%maze(MAZELIST, START, ZIEL, X) :- 
+%maze(MAZELIST, START, ZIEL, X) :-
 %findpath(MAZELIST, START, WALKABLE, X).
 
 maze(MAZELIST, START, ZIEL, X) :-
@@ -56,9 +56,9 @@ move(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, X) :-
 
 
 %findpath(MAZELIST, START, WALKABLE, X) :-
-%    STARTROW = START1,
-%    STARTCOLUMN = START2,
-%    getValue(MAZELIST, START, X).
+% STARTROW = START1,
+% STARTCOLUMN = START2,
+% getValue(MAZELIST, START, X).
 
 isNotVisited(ROW, COLUMN, VISITED) :-
     \+isVisited(ROW, COLUMN, VISITED).
@@ -86,7 +86,7 @@ inRow([_|RestMaze], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), X) :-
     CURROWI is CURROW+1,
     inRow(RestMaze, CURROWI, CURCOLUMN, (STARTROW, STARTCOLUMN), X).
 
-inColumn([Element|_], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), Element) :- 
+inColumn([Element|_], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), Element) :-
     CURCOLUMN =:= STARTCOLUMN.
 
 inColumn([_|RestList], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), X) :-
