@@ -9,7 +9,8 @@ getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
     findAllPaths(MAZELIST, START, ZIEL, ALLPATHS),
     %write('ALLPATHS: '),
     %write(ALLPATHS),nl,
-    findShortestPath(ALLPATHS, 999, _, PATHLENGTH, SHORTESTPATH),
+    initShortest(ALLPATHS, INITMIN),
+    findShortestPath(ALLPATHS, INITMIN, _, PATHLENGTH, SHORTESTPATH),!,
     nl,
     write('##############################################################################'),nl,
     write('Shortest Path with length '),
@@ -19,7 +20,8 @@ getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
     write('##############################################################################'),nl.
 
 
-
+initShortest([FIRST|_], MIN) :-
+    length(FIRST, MIN).
 
 findShortestPath([CURPATH|[]], OLDMIN, _, CURMIN, CURPATH) :-
     length(CURPATH, CURMIN),
