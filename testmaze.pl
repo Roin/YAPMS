@@ -24,6 +24,12 @@ check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 
 
 % check south unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH):-
+    CURROWI is CURROW + 1,
+    getValue(MAZELIST, (CURROWI,CURCOLUMN),VALUE),
+    VALUE =:= 0,
+    \+member((CURROWI,CURCOLUMN), VISITED),
+    move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
 
 
 
@@ -37,6 +43,13 @@ check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 
 
 % check north unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+  CURROWI is CURROW - 1,
+  getValue(MAZELIST, (CURROWI, CURCOLUMN),VALUE),
+  VALUE =:= 0,
+  \+member((CURROWI,CURCOLUMN), VISITED),
+  move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
+  
 
 
 % check west visited
