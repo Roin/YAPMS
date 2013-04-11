@@ -2,8 +2,51 @@
 %maze(MAZELIST, START, ZIEL) :- 
 %findpath(MAZELIST, START, WALKABLE).
 
-maze(MAZELIST, START, ZIEL, PATH) :-
-    check(MAZELIST, START, ZIEL, [START], PATH).
+maze(MAZELIST, START, ZIEL, SHORTESTPATH) :-
+    getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH).
+
+getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
+    findAllPaths(MAZELIST, START, ZIEL, ALLPATHS),
+    %write('ALLPATHS: '),
+    %write(ALLPATHS),nl,
+    findShortestPath(ALLPATHS, 999, _, PATHLENGTH, SHORTESTPATH),
+    nl,
+    write('##############################################################################'),nl,
+    write('Shortest Path with length '),
+    write(PATHLENGTH),
+    write(' is: '),nl,
+    write(SHORTESTPATH),nl,
+    write('##############################################################################'),nl.
+
+
+
+
+findShortestPath([CURPATH|[]], OLDMIN, _, CURMIN, CURPATH) :-
+    length(CURPATH, CURMIN),
+    CURMIN =< OLDMIN.
+
+findShortestPath([_|[]], OLDMIN, OLDPATH, OLDMIN, OLDPATH).
+
+
+findShortestPath([CURPATH|RESTPATHS], OLDMIN, _, NEWMIN, NEWPATH) :-
+    length(CURPATH, CURMIN),
+    CURMIN =< OLDMIN,
+    findShortestPath(RESTPATHS, CURMIN, CURPATH, NEWMIN, NEWPATH).
+
+findShortestPath([_|RESTPATHS], OLDMIN, OLDPATH, NEWMIN, NEWPATH) :-
+    findShortestPath(RESTPATHS, OLDMIN, OLDPATH, NEWMIN, NEWPATH).
+
+
+
+
+
+
+findAllPaths(MAZELIST, START, ZIEL, ALLPATHS) :-
+    findall(PATH, check(MAZELIST, START, ZIEL, [START], PATH), ALLPATHS).
+
+%findAllPaths(_, _, _, _).
+
+    
 
 % found our goal
 check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
@@ -12,8 +55,9 @@ check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
     getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
     VALUE =:= 0,
     reverse(VISITED, PATH),
-    write('Walked Path: '),
-    write(PATH),nl.
+    %write('Walked Path: '),
+    %write(PATH),nl,
+    true.
 
 
 % check east unvisited
@@ -46,12 +90,12 @@ check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 
 % check north unvisited
 check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
-  CURROWI is CURROW - 1,
-  getValue(MAZELIST, (CURROWI, CURCOLUMN),VALUE),
-  VALUE =:= 0,
-  isNotVisited((CURROWI,CURCOLUMN), VISITED),
-  move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
-  
+    CURROWI is CURROW - 1,
+    getValue(MAZELIST, (CURROWI, CURCOLUMN),VALUE),
+    VALUE =:= 0,
+    isNotVisited((CURROWI,CURCOLUMN), VISITED),
+    move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
+
 
 
 % check west visited
@@ -79,10 +123,10 @@ move(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 isNotVisited((ROW, COLUMN), VISITED) :-
     \+isVisited(ROW, COLUMN, VISITED).
 
-isVisited(ROW, COLUMN, []) :-
+isVisited(_, _, []) :-
     false.
 
-isVisited(ROW, COLUMN, [(X,Y)|VISITED]) :-
+isVisited(ROW, COLUMN, [(X,Y)|_]) :-
     ROW =:= X,
     COLUMN =:= Y.
 
@@ -102,14 +146,14 @@ inRow([_|RESTMAZE], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
     CURROWI is CURROW+1,
     inRow(RESTMAZE, CURROWI, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE).
 
-inColumn([ELEMENT|_], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), ELEMENT) :- 
+inColumn([ELEMENT|_], _, CURCOLUMN, (_, STARTCOLUMN), ELEMENT) :- 
     CURCOLUMN =:= STARTCOLUMN.
 
 inColumn([_|RESTLIST], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
     CURCOLUMN < STARTCOLUMN,
     CURCOLUMNI is CURCOLUMN+1,
     inColumn(RESTLIST, CURROW, CURCOLUMNI, (STARTROW, STARTCOLUMN), VALUE).
- 
+
 myreverse([],[]).
 
 myreverse([HEAD|TAIL], REVERSE) :-
@@ -117,24 +161,29 @@ myreverse([HEAD|TAIL], REVERSE) :-
     append(REVERSETAIL, [HEAD], REVERSE).
 
 %Examples:
-example1([[1,1,1,1,1,0],
-          [0,0,0,0,0,0],
-          [0,0,0,1,1,0],
-          [1,1,0,0,1,0],
-          [1,1,0,0,0,0],
-          [1,0,0,0,1,0]]).
-          
-example2([[1,1,1,1,1,0],
-          [0,0,0,0,0,0],
-          [0,0,0,1,1,0],
-          [1,1,0,0,1,0],
-          [1,1,0,0,0,0],
-          [1,0,0,0,0,0]]).
-          
-example3([[1,1,1,1,0,1],
-          [0,0,0,1,0,0],
-          [0,1,0,0,0,0],
-          [1,1,0,0,1,0],
-          [1,1,0,0,0,0],
-          [1,0,0,0,0,0]]).
-          
+
+
+ex1([
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,0,0,1,1,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,1,0]]).
+
+ex2([
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,0,0,1,1,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,0,0]]).
+
+ex3([
+[1,1,1,1,0,1],
+[0,0,0,1,0,0],
+[0,1,0,0,0,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,0,0]]).
+
