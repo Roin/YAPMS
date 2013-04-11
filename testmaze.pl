@@ -12,10 +12,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
     getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
     VALUE =:= 0,
     reverse(VISITED, PATH),
-<<<<<<< HEAD
     write('Walked Path: '),
-=======
->>>>>>> 8531b1c2684262002172dc687c84d6caee487870
     write(PATH),nl.
 
 
