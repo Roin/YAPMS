@@ -3,16 +3,15 @@
 %findpath(MAZELIST, START, WALKABLE).
 
 maze(MAZELIST, START, ZIEL, PATH) :-
-    check(MAZELIST, START, ZIEL, START, PATH).
+    check(MAZELIST, START, ZIEL, [START], PATH).
 
-% TODO maybe add X to VISITED
+% found our goal
 check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
     CURROW =:= ZIEL1,
     CURCOLUMN =:= ZIEL2,
     getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
     VALUE =:= 0,
-    PATH = VISITED.
-
+    reverse(VISITED, PATH).
 
 
 % check east unvisited
@@ -105,3 +104,8 @@ inColumn([_|RESTLIST], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
     CURCOLUMNI is CURCOLUMN+1,
     inColumn(RESTLIST, CURROW, CURCOLUMNI, (STARTROW, STARTCOLUMN), VALUE).
  
+myreverse([],[]).
+
+myreverse([HEAD|TAIL], REVERSE) :-
+    myreverse(TAIL, REVERSETAIL),
+    append(REVERSETAIL, [HEAD], REVERSE).
