@@ -11,7 +11,8 @@ check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
     CURCOLUMN =:= ZIEL2,
     getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
     VALUE =:= 0,
-    reverse(VISITED, PATH).
+    reverse(VISITED, PATH),
+    write(PATH),nl.
 
 
 % check east unvisited
@@ -113,3 +114,26 @@ myreverse([],[]).
 myreverse([HEAD|TAIL], REVERSE) :-
     myreverse(TAIL, REVERSETAIL),
     append(REVERSETAIL, [HEAD], REVERSE).
+
+%Examples:
+example1([[1,1,1,1,1,0],
+          [0,0,0,0,0,0],
+          [0,0,0,1,1,0],
+          [1,1,0,0,1,0],
+          [1,1,0,0,0,0],
+          [1,0,0,0,1,0]]).
+          
+example2([[1,1,1,1,1,0],
+          [0,0,0,0,0,0],
+          [0,0,0,1,1,0],
+          [1,1,0,0,1,0],
+          [1,1,0,0,0,0],
+          [1,0,0,0,0,0]]).
+          
+example3([[1,1,1,1,0,1],
+          [0,0,0,1,0,0],
+          [0,1,0,0,0,0],
+          [1,1,0,0,1,0],
+          [1,1,0,0,0,0],
+          [1,0,0,0,0,0]]).
+          
