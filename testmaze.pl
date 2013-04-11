@@ -11,7 +11,9 @@ check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
     CURCOLUMN =:= ZIEL2,
     getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
     VALUE =:= 0,
-    reverse(VISITED, PATH).
+    reverse(VISITED, PATH),
+    write('Walked Path: '),
+    write(PATH),nl.
 
 
 % check east unvisited
