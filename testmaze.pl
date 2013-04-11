@@ -1,4 +1,4 @@
-% maze([[0, 0, 0, 1, 0], [0, 1, 1, 1, 0], [0, 0, 1, 0 , 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0]], (1, 1), (5, 3)).
+% maze([[0, 0, 0, 1, 0], [0, 1, 1, 1, 0], [0, 0, 1, 0 , 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0]], (1, 1), (5, 3),X).
 %maze(MAZELIST, START, ZIEL) :- 
 %findpath(MAZELIST, START, WALKABLE).
 
@@ -29,6 +29,12 @@ check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 
 
 % check west unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+    CURCOLUMNI is CURCOLUMN - 1,
+    getValue(MAZELIST, (CURROW, CURCOLUMNI), VALUE),
+    VALUE =:= 0,
+    \+member((CURROW,CURCOLUMNI),VISITED),
+    move(MAZELIST, (CURROW,CURCOLUMNI), ZIEL, VISITED, PATH).
 
 
 % check north unvisited
