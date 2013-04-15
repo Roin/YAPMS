@@ -9,8 +9,7 @@ getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
     findAllPaths(MAZELIST, START, ZIEL, ALLPATHS),
     %write('ALLPATHS: '),
     %write(ALLPATHS),nl,
-    initShortest(ALLPATHS, INITMIN),
-    findShortestPath(ALLPATHS, INITMIN, _, PATHLENGTH, SHORTESTPATH),!,
+    findShortestPath(ALLPATHS, SHORTESTPATH, PATHLENGTH),
     nl,
     write('##############################################################################'),nl,
     write('Shortest Path with length '),
@@ -20,24 +19,18 @@ getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
     write('##############################################################################'),nl.
 
 
-initShortest([FIRST|_], MIN) :-
-    length(FIRST, MIN).
 
-findShortestPath([CURPATH|[]], OLDMIN, _, CURMIN, CURPATH) :-
+findShortestPath([CURPATH|[]], CURPATH, MIN) :-
+    length(CURPATH, MIN).
+
+findShortestPath([CURPATH|RESTPATH], SHORTESTPATH, MIN) :-
+    findShortestPath(RESTPATH, NEWPATH, NEWMIN),
     length(CURPATH, CURMIN),
-    CURMIN =< OLDMIN.
-
-findShortestPath([_|[]], OLDMIN, OLDPATH, OLDMIN, OLDPATH).
-
-
-findShortestPath([CURPATH|RESTPATHS], OLDMIN, _, NEWMIN, NEWPATH) :-
-    length(CURPATH, CURMIN),
-    CURMIN =< OLDMIN,
-    findShortestPath(RESTPATHS, CURMIN, CURPATH, NEWMIN, NEWPATH).
-
-findShortestPath([_|RESTPATHS], OLDMIN, OLDPATH, NEWMIN, NEWPATH) :-
-    findShortestPath(RESTPATHS, OLDMIN, OLDPATH, NEWMIN, NEWPATH).
-
+    (
+        (CURMIN =< NEWMIN, SHORTESTPATH = CURPATH, MIN = CURMIN)
+        ;
+            (CURMIN >= NEWMIN, SHORTESTPATH = NEWPATH, MIN = NEWMIN)
+            ).
 
 
 
@@ -100,26 +93,8 @@ check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
 
 
 
-% check west visited
-
-
-% check south visited
-
-
-% check east visited
-
-
-
-% check north visited
-
-
 move(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
     check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, [(CURROW, CURCOLUMN)|VISITED], PATH).
-
-
-
-
-
 
 
 isNotVisited((ROW, COLUMN), VISITED) :-
@@ -156,11 +131,6 @@ inColumn([_|RESTLIST], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
     CURCOLUMNI is CURCOLUMN+1,
     inColumn(RESTLIST, CURROW, CURCOLUMNI, (STARTROW, STARTCOLUMN), VALUE).
 
-myreverse([],[]).
-
-myreverse([HEAD|TAIL], REVERSE) :-
-    myreverse(TAIL, REVERSETAIL),
-    append(REVERSETAIL, [HEAD], REVERSE).
 
 %Examples:
 
