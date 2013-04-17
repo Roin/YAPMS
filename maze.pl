@@ -1,31 +1,235 @@
-:start(a).
-finish(q).
-route(a,d).
-route(d,i).
-route(i,p).
-route(p,q).
-route(l,d).
-route(q,v).
-route(v,d).
-route(a,g).
-route(g,l).
-route(l,s).
-route(s,u).
-travel(A,A).
-travel(A,C) :- route(A,B),travelsafe(B,C).
-%solve :- start(A),finish(B), travel(A,B).
-travellog(A,A,[]).
-travellog(A,C,[A-B|Steps]) :-
-route(A,B), travellog(B,C,Steps),!.
-solve(L) :- start(A), finish(B),
-travellog(A,B,L).
-travelsafe(A,A,_).
-travelsafe(A,C,Closed) :-
-route(A,B), \+ member(B,Closed),
-travelsafe(B,C,[B|Closed]).
+% maze solving algorithm by Florian Kanngießer (MTR NR) and Christian Burkard (4206853)
+
+
+%% Call: maze(MAZELIST, START, GOAL, SHORTESTPATH)
+%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
+%              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
+%              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
+%              SHORTESTPATH: A list containing the shortest path which solves the maze.
+%
+%   It is the "API" function. This function starts the maze solving algorithm.
+%%
+maze(MAZELIST, START, ZIEL, SHORTESTPATH) :-
+    getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH).
+
+
+%% Call: getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH)
+%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
+%              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
+%              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
+%              SHORTESTPATH: A list containing the shortest path which solves the maze.
+%%
+getShortestPath(MAZELIST, START, ZIEL, SHORTESTPATH) :-
+    findAllPaths(MAZELIST, START, ZIEL, ALLPATHS),
+    %write('ALLPATHS: '),
+    %write(ALLPATHS),nl,
+    initShortest(ALLPATHS, INITMIN),
+    findShortestPath(ALLPATHS, INITMIN, _, PATHLENGTH, SHORTESTPATH),!,
+    nl,
+    write('##############################################################################'),nl,
+    write('Shortest Path with length '),
+    write(PATHLENGTH),
+    write(' is: '),nl,
+    write(SHORTESTPATH),nl,
+    write('##############################################################################'),nl.
+
+
+initShortest([FIRST|_], MIN) :-
+    length(FIRST, MIN).
+
+findShortestPath([CURPATH|[]], OLDMIN, _, CURMIN, CURPATH) :-
+    length(CURPATH, CURMIN),
+    CURMIN =< OLDMIN.
+
+findShortestPath([_|[]], OLDMIN, OLDPATH, OLDMIN, OLDPATH).
+
+
+findShortestPath([CURPATH|RESTPATHS], OLDMIN, _, NEWMIN, NEWPATH) :-
+    length(CURPATH, CURMIN),
+    CURMIN =< OLDMIN,
+    findShortestPath(RESTPATHS, CURMIN, CURPATH, NEWMIN, NEWPATH).
+
+findShortestPath([_|RESTPATHS], OLDMIN, OLDPATH, NEWMIN, NEWPATH) :-
+    findShortestPath(RESTPATHS, OLDMIN, OLDPATH, NEWMIN, NEWPATH).
 
 
 
 
 
+
+findAllPaths(MAZELIST, START, ZIEL, ALLPATHS) :-
+    findall(PATH, check(MAZELIST, START, ZIEL, [START], PATH), ALLPATHS).
+
+%findAllPaths(_, _, _, _).
+
+    
+
+% found our goal
+check(MAZELIST, (CURROW, CURCOLUMN), (ZIEL1, ZIEL2), VISITED, PATH) :-
+    CURROW =:= ZIEL1,
+    CURCOLUMN =:= ZIEL2,
+    getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
+    VALUE =:= 0,
+    reverse(VISITED, PATH),
+    %write('Walked Path: '),
+    %write(PATH),nl,
+    true.
+
+
+% check east unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+    CURCOLUMNI is CURCOLUMN+1,
+    getValue(MAZELIST, (CURROW, CURCOLUMNI) , VALUE),
+    VALUE =:= 0,
+    isNotVisited((CURROW, CURCOLUMNI), VISITED),
+    move(MAZELIST, (CURROW, CURCOLUMNI), ZIEL, VISITED, PATH).
+
+
+% check south unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH):-
+    CURROWI is CURROW + 1,
+    getValue(MAZELIST, (CURROWI,CURCOLUMN),VALUE),
+    VALUE =:= 0,
+    isNotVisited((CURROWI,CURCOLUMN), VISITED),
+    move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
+
+
+
+% check west unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+    CURCOLUMNI is CURCOLUMN - 1,
+    getValue(MAZELIST, (CURROW, CURCOLUMNI), VALUE),
+    VALUE =:= 0,
+    isNotVisited((CURROW,CURCOLUMNI),VISITED),
+    move(MAZELIST, (CURROW,CURCOLUMNI), ZIEL, VISITED, PATH).
+
+
+% check north unvisited
+check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+    CURROWI is CURROW - 1,
+    getValue(MAZELIST, (CURROWI, CURCOLUMN),VALUE),
+    VALUE =:= 0,
+    isNotVisited((CURROWI,CURCOLUMN), VISITED),
+    move(MAZELIST, (CURROWI, CURCOLUMN), ZIEL, VISITED, PATH).
+
+
+
+% check west visited
+
+
+% check south visited
+
+
+% check east visited
+
+
+
+% check north visited
+
+
+move(MAZELIST, (CURROW, CURCOLUMN), ZIEL, VISITED, PATH) :-
+    check(MAZELIST, (CURROW, CURCOLUMN), ZIEL, [(CURROW, CURCOLUMN)|VISITED], PATH).
+
+
+
+
+
+
+
+isNotVisited((ROW, COLUMN), VISITED) :-
+    \+isVisited(ROW, COLUMN, VISITED).
+
+isVisited(_, _, []) :-
+    false.
+
+isVisited(ROW, COLUMN, [(X,Y)|_]) :-
+    ROW =:= X,
+    COLUMN =:= Y.
+
+isVisited(ROW, COLUMN, [_|VISITED]) :-
+    isVisited(ROW, COLUMN, VISITED).
+
+
+getValue(MAZELIST, START, VALUE) :-
+    inRow(MAZELIST, 1, 1, START, VALUE).
+
+inRow([ROW|_], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
+    CURROW =:= STARTROW,
+    inColumn(ROW, CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE).
+
+inRow([_|RESTMAZE], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
+    CURROW < STARTROW,
+    CURROWI is CURROW+1,
+    inRow(RESTMAZE, CURROWI, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE).
+
+inColumn([ELEMENT|_], _, CURCOLUMN, (_, STARTCOLUMN), ELEMENT) :- 
+    CURCOLUMN =:= STARTCOLUMN.
+
+inColumn([_|RESTLIST], CURROW, CURCOLUMN, (STARTROW, STARTCOLUMN), VALUE) :-
+    CURCOLUMN < STARTCOLUMN,
+    CURCOLUMNI is CURCOLUMN+1,
+    inColumn(RESTLIST, CURROW, CURCOLUMNI, (STARTROW, STARTCOLUMN), VALUE).
+
+myreverse([],[]).
+
+myreverse([HEAD|TAIL], REVERSE) :-
+    myreverse(TAIL, REVERSETAIL),
+    append(REVERSETAIL, [HEAD], REVERSE).
+
+%Examples:
+
+
+ex1([
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,0,0,1,1,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,1,0]]).
+
+ex2([
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,0,0,1,1,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,0,0]]).
+
+ex3([
+[1,1,1,1,0,1],
+[0,0,0,1,0,0],
+[0,1,0,0,0,0],
+[1,1,0,0,1,0],
+[1,1,0,0,0,0],
+[1,0,0,0,0,0]]).
+
+ex4([
+[1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,0,0,1,0],
+[0,0,0,0,0,1,1,0,0,0,1,1,1,0,1,0,0,1,0,0,1,1,0,1,0,0],
+[1,1,1,0,0,1,0,0,0,1,0,1,1,0,0,1,1,1,0,0,0,0,0,1,0,0],
+[0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0],
+[1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,1,0,1],
+[0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0],
+[1,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1,1,1],
+[0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0],
+[1,1,0,0,0,0,0,1,1,1,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1,1],
+[0,0,0,1,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0],
+[1,1,0,0,0,0,1,1,0,1,1,1,0,0,0,1,1,1,0,0,1,1,1,1,0,0],
+[0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0],
+[1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1],
+[0,0,0,0,1,1,0,0,1,0,0,1,1,1,0,0,0,0,1,1,0,1,0,1,0,0],
+[1,1,1,0,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,1],
+[0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,0,1,1],
+[1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1],
+[1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0],
+[1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0],
+[1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+[0,0,0,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1],
+[1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0],
+[0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1],
+[0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+[1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0],
+[0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0],
+[0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1],
+[1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0]]).
 
