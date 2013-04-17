@@ -14,7 +14,9 @@ maze(MAZELIST, START, GOAL, PATH) :-
     isValidStartField(MAZELIST, START),
     isValidGoalField(MAZELIST, GOAL),
     check(MAZELIST, START, GOAL, [START], PATH),
-    write('PATH: '),
+    write('path length: '),
+    length(PATH, LENG),
+    write(LENG),nl,write('PATH: '),
     write(PATH),nl.
 
 %% Call: check(MAZELIST, START, GOAL, [START], PATH)
