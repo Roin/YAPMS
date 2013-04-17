@@ -1,4 +1,4 @@
-% maze solving algorithm by Florian Kanngießer (MTR NR) and Christian Burkard (4206853)
+% maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
 
 
 %% Call: maze(MAZELIST, START, GOAL, SHORTESTPATH)
