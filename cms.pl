@@ -11,6 +11,8 @@
 %   It finds the shortest path for a given maze, given some start and goal coordinates.
 %%
 maze(MAZELIST, START, GOAL, SHORTESTPATH) :-
+    isValidField(MAZELIST, START),
+    isValidField(MAZELIST, GOAL),
     getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH).
 
 
@@ -25,7 +27,7 @@ maze(MAZELIST, START, GOAL, SHORTESTPATH) :-
 %%
 getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH) :-
     findAllPaths(MAZELIST, START, GOAL, ALLPATHS),
-    findShortestPath(ALLPATHS, SHORTESTPATH, PATHLENGTH),
+    findShortestPath(ALLPATHS, SHORTESTPATH, PATHLENGTH),!,
     nl,
     write('##############################################################################'),nl,
     write('Shortest Path with length '),
@@ -86,8 +88,7 @@ findAllPaths(MAZELIST, START, GOAL, ALLPATHS) :-
 check(MAZELIST, (CURROW, CURCOLUMN), (GOAL1, GOAL2), VISITED, PATH) :-
     CURROW =:= GOAL1,
     CURCOLUMN =:= GOAL2,
-    getValue(MAZELIST, (CURROW, CURCOLUMN) , VALUE),
-    VALUE =:= 0,
+    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
     reverse(VISITED, PATH),
     %write('Walked Path: '),
     %write(PATH),nl,
@@ -96,9 +97,8 @@ check(MAZELIST, (CURROW, CURCOLUMN), (GOAL1, GOAL2), VISITED, PATH) :-
 
 % check east unvisited
 check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
-    CURCOLUMNI is CURCOLUMN+1,
-    getValue(MAZELIST, (CURROW, CURCOLUMNI) , VALUE),
-    VALUE =:= 0,
+    CURCOLUMNI is CURCOLUMN + 1,
+    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
     isNotVisited((CURROW, CURCOLUMNI), VISITED),
     move(MAZELIST, (CURROW, CURCOLUMNI), GOAL, VISITED, PATH).
 
@@ -106,8 +106,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
 % check south unvisited
 check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH):-
     CURROWI is CURROW + 1,
-    getValue(MAZELIST, (CURROWI,CURCOLUMN),VALUE),
-    VALUE =:= 0,
+    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
     isNotVisited((CURROWI,CURCOLUMN), VISITED),
     move(MAZELIST, (CURROWI, CURCOLUMN), GOAL, VISITED, PATH).
 
@@ -116,8 +115,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH):-
 % check west unvisited
 check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
     CURCOLUMNI is CURCOLUMN - 1,
-    getValue(MAZELIST, (CURROW, CURCOLUMNI), VALUE),
-    VALUE =:= 0,
+    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
     isNotVisited((CURROW,CURCOLUMNI),VISITED),
     move(MAZELIST, (CURROW,CURCOLUMNI), GOAL, VISITED, PATH).
 
@@ -125,8 +123,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
 % check north unvisited
 check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
     CURROWI is CURROW - 1,
-    getValue(MAZELIST, (CURROWI, CURCOLUMN),VALUE),
-    VALUE =:= 0,
+    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
     isNotVisited((CURROWI,CURCOLUMN), VISITED),
     move(MAZELIST, (CURROWI, CURCOLUMN), GOAL, VISITED, PATH).
 
@@ -167,15 +164,26 @@ isVisited(ROW, COLUMN, [(X,Y)|_]) :-
 isVisited(ROW, COLUMN, [_|VISITED]) :-
     isVisited(ROW, COLUMN, VISITED).
 
+
+%% Call: isValidField(MAZELIST, COORDINATE)
+%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
+%              COORDINATE: A tupel containing the coordinates which will be checked.
+%
+%   Is TRUE if the field is a valid (walkable) position in the maze.
+%%
+isValidField(MAZE, COORDINATE) :-
+    getValue(MAZE, COORDINATE, VALUE),
+    VALUE =:= 0.
+
 %% Call: getValue(MAZELIST, COORDINATE, VALUE)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
+%              COORDINATE: A tupel containing the coordinates which will be checked.
 %              VALUE: The value of the maze's field with coordinates given by COORDINATE.
 %
 %   Gets the value of a given field in the maze.
 %%
 getValue(MAZELIST, COORDINATE, VALUE) :-
-    inRow(MAZELIST, 1, 1, START, VALUE).
+    inRow(MAZELIST, 1, 1, COORDINATE, VALUE).
 
 inRow([ROW|_], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
     CURROW =:= GOALROW,
@@ -186,7 +194,7 @@ inRow([_|RESTMAZE], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
     CURROWI is CURROW+1,
     inRow(RESTMAZE, CURROWI, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE).
 
-inColumn([ELEMENT|_], _, CURCOLUMN, (_, GOALROW), ELEMENT) :- 
+inColumn([ELEMENT|_], _, CURCOLUMN, (_, GOALCOLUMN), ELEMENT) :- 
     CURCOLUMN =:= GOALCOLUMN.
 
 inColumn([_|RESTLIST], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
