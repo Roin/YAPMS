@@ -1,9 +1,0 @@
-We (Christian Burkard, Florian Kanngießer) are going to write an application to solve mazes. The representation of the maze is given by a list containing lists. 
-The walkable path is represented by 0 numbers, the borders by 1 numbers and the goal is represented by a 5. The algorithm will simply walk through the maze,
-looking for a walkable path until it finds the first goal it meets. In case that there is no path to go it will simply stop (glaub ich).
-Pattern:
-maze(MazeList,Start,Result).
-A sample query would be:
-maze([[1,1,0,1,1],[1,0,0,1,1],[1,1,0,5,1]],[1,3],X). 
-
-Vielleicht können wir auch sagen Start ist durch ein S definiert ich mag das mit den Koordinaten nicht so sehr.
