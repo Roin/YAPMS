@@ -19,6 +19,9 @@ maze(MazeList, Start, Goal, Path) :-
     length(Path, Leng),
     write(Leng),nl,write('Path: '),
     write(Path),nl,
+    getDirections(Path,Directions),
+    write('Walked directions: '),
+    write(Directions),nl,
     write('##############################################################################'),nl.
 
 %% Call: check(MazeList, Start, Goal, [Start], Path)
@@ -142,6 +145,27 @@ isValidGoalField(_, (Row, Column)) :-
     write(Column),
     write(') is not walkable.'),nl,
     false.
+
+getDirections([(FirstY, FirstX), (SecondY, SecondX)|[]], [Add]) :-
+    (FirstY > SecondY,
+        Add= 'north');
+        (FirstY < SecondY,
+            Add = 'south');
+            (FirstX > SecondX,
+                Add = 'west');
+                (FirstX < SecondX,
+                    Add = 'east').
+
+getDirections([(FirstY, FirstX), (SecondY, SecondX)|Rest], [Add|Directions]) :-
+    ((FirstY > SecondY,
+        Add= 'north');
+        (FirstY < SecondY,
+            Add = 'south');
+            (FirstX > SecondX,
+                Add = 'west');
+                (FirstX < SecondX,
+                    Add = 'east')),
+                    getDirections([(SecondY, SecondX)|Rest], Directions).
 
 %% Call: getValue(MazeList, Coordinate, Value)
 %              MazeList: A list containing the maze. See examples on the bottom for the format.
