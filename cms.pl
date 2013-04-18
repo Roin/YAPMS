@@ -1,7 +1,7 @@
 % maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
 
 
-%% Call: maze(MAZELIST, START, GOAL, SHORTESTPATH)
+%% Call: maze(+MAZELIST, +START, +GOAL, -SHORTESTPATH)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
 %              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
@@ -16,7 +16,7 @@ maze(MAZELIST, START, GOAL, SHORTESTPATH) :-
     getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH).
 
 
-%% Call: getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH)
+%% Call: getShortestPath(+MAZELIST, +START, +GOAL, -SHORTESTPATH)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
 %              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
@@ -37,7 +37,7 @@ getShortestPath(MAZELIST, START, GOAL, SHORTESTPATH) :-
     write('##############################################################################'),nl.
 
 
-%% Call: findShortestPath(PATHS, SHORTESTPATH, PATHLENGTH)
+%% Call: findShortestPath(+PATHS, -SHORTESTPATH, -PATHLENGTH)
 %                PATHS: A list containing paths.
 %                SHORTESTPATH: The shortest path in the list PATHS
 %                PATHLENGTH: The length of the shortest path in PATHS
@@ -59,7 +59,7 @@ findShortestPath([CURPATH|RESTPATH], SHORTESTPATH, MIN) :-
 
 
 
-%% Call: findAllPaths(MAZELIST, START, GOAL, ALLPATHS)
+%% Call: findAllPaths(+MAZELIST, +START, +GOAL, +ALLPATHS)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
 %              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
@@ -72,7 +72,7 @@ findAllPaths(MAZELIST, START, GOAL, ALLPATHS) :-
     findall(PATH, check(MAZELIST, START, GOAL, [START], PATH), ALLPATHS).
 
 
-%% Call: check(MAZELIST, START, GOAL, [START], PATH)
+%% Call: check(+MAZELIST, +START, +GOAL, +VISITED, -PATH)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
 %              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
@@ -128,7 +128,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
     move(MAZELIST, (CURROWI, CURCOLUMN), GOAL, VISITED, PATH).
 
 
-%% Call: move(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH)
+%% Call: move(+MAZELIST, (+CURROW, +CURCOLUMN), +GOAL, +VISITED, -PATH)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              CURROW: Y-coordinate of the current position.
 %              CURCOLUMN: X-coordinate of the current position.
@@ -141,7 +141,7 @@ check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
 move(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
     check(MAZELIST, (CURROW, CURCOLUMN), GOAL, [(CURROW, CURCOLUMN)|VISITED], PATH).
 
-%% Call: isNotVisited((ROW, COLUMN), VISITED)
+%% Call: isNotVisited((+ROW, +COLUMN), +VISITED)
 %               ROW: The Y-coordinate of the tested field.
 %               COLUMN: The X-coordinate of the tested field.
 %               VISITED: The list that contains all already visited positions in the maze.
@@ -165,7 +165,7 @@ isVisited(ROW, COLUMN, [_|VISITED]) :-
     isVisited(ROW, COLUMN, VISITED).
 
 
-%% Call: isValidField(MAZELIST, COORDINATE)
+%% Call: isValidField(+MAZELIST, +COORDINATE)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              COORDINATE: A tupel containing the coordinates which will be checked.
 %
@@ -197,7 +197,7 @@ isValidGoalField(_, (ROW, COLUMN)) :-
     write(') is not walkable.'),nl,
     false.
 
-%% Call: getValue(MAZELIST, COORDINATE, VALUE)
+%% Call: getValue(+MAZELIST, +COORDINATE, -VALUE)
 %              MAZELIST: A list containing the maze. See examples on the bottom for the format.
 %              COORDINATE: A tupel containing the coordinates which will be checked.
 %              VALUE: The value of the maze's field with coordinates given by COORDINATE.
@@ -304,6 +304,7 @@ ex5([
 %
 % Possible Start/Goal scenarios:
 %   S(1,1) - G(63,115)
+%   S(1,1) - G(54,1)
 ex6([
 [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
