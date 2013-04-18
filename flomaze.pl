@@ -18,7 +18,7 @@ maze(MazeList, Start, Goal, Path) :-
     write('path length: '),
     length(Path, Leng),
     write(Leng),nl,write('Path: '),
-    write(Path),nl
+    write(Path),nl,
     write('##############################################################################'),nl.
 
 %% Call: check(MazeList, Start, Goal, [Start], Path)
