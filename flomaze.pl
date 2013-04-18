@@ -179,7 +179,7 @@ getDirections([(FirstY, FirstX), (SecondY, SecondX)|Rest], [Add|Directions]) :-
 %
 %   Gets the value of a given field in the maze.
 %%
-getValu(MazeList, Coordinate, Value) :-
+getValue(MazeList, Coordinate, Value) :-
     inRow(MazeList, 1, 1, Coordinate, Value).
 
 inRow([Row|_], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
@@ -206,7 +206,7 @@ inColumn([_|RestList], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
 %% Here you can find some examples for the maze solving algorithm.
 %  To use them append them to your maze/4 function call.
 %  This can look like: 
-%            ex1(Maze),maze(Maze,(2,1), (6,6), Path).
+%            ex1(Maze),maze(Maze,(2,1),(6,6),Path).
 
 %% Example query ex1:
 %  ex1(Maze),maze(Maze,(1,6),(6,2),X).

@@ -1,6 +1,6 @@
 %% maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
 % To get some example querries check the bottom of this file in the Examples section.
-
+%%
 
 %% Call: maze(+MazeList, +Start, +Goal, -ShortestPath)
 %              MazeList: A list containing the maze. See examples on the bottom for the format.
@@ -230,7 +230,7 @@ inColumn([_|RestList], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
 %% Here you can find some examples for the maze solving algorithm.
 %  To use them append them to your maze/4 function call.
 %  This can look like: 
-%            ex1(Maze),maze(Maze,(2,1), (6,6), Path).
+%            ex1(Maze),maze(Maze,(2,1),(6,6),Path).
 
 %% Example query ex1:
 %  ex1(Maze),maze(Maze,(1,6),(6,2),X).
