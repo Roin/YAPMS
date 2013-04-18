@@ -13,8 +13,8 @@
 %   It finds the shortest path for a given maze, given some start and goal coordinates.
 %%
 maze(MazeList, Start, Goal, ShortestPath) :-
-    isValidStartField(MazeList, Start),
-    isValidGoalField(MazeList, Goal),
+    isValidStartField(MazeList, Start),!,
+    isValidGoalField(MazeList, Goal),!,
     getShortestPath(MazeList, Start, Goal, ShortestPath).
 
 

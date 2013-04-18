@@ -11,8 +11,8 @@
 %   It finds the shortest path for a given maze, given some start and goal coordinates.
 %%
 maze(MazeList, Start, Goal, Path) :-
-    isValidStartField(MazeList, Start),
-    isValidGoalField(MazeList, Goal),
+    isValidStartField(MazeList, Start),!,
+    isValidGoalField(MazeList, Goal),!,
     check(MazeList, Start, Goal, [Start], Path),
     write('path length: '),
     length(Path, Leng),
