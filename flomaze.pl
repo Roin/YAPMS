@@ -15,9 +15,9 @@ maze(MazeList, Start, Goal, Path) :-
     isValidGoalField(MazeList, Goal),
     check(MazeList, Start, Goal, [Start], Path),
     write('path length: '),
-    length(PATH, LENG),
-    write(LENG),nl,write('PATH: '),
-    write(PATH),nl.
+    length(Path, Leng),
+    write(Leng),nl,write('Path: '),
+    write(Path),nl.
 
 %% Call: check(MazeList, Start, Goal, [Start], Path)
 %              MazeList: A list containing the maze. See examples on the bottom for the format.
