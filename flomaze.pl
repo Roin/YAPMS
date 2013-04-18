@@ -1,28 +1,28 @@
-% maze solving algorithm by Florian Kanngießer (MTR NR) and Christian Burkard (4206853)
+% maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
 
 
-%% Call: maze(MAZELIST, START, GOAL, SHORTESTPATH)
-%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
-%              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
-%              SHORTESTPATH: A list containing the shortest path which solves the maze.
+%% Call: maze(MazeList, Start, Goal, Path)
+%              MazeList: A list containing the maze. See examples on the bottom for the format.
+%              Start: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
+%              Goal: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
+%              Path: A list containing the shortest path which solves the maze.
 %
 %   This is the "API" function. This function starts the maze solving algorithm.
 %   It finds the shortest path for a given maze, given some start and goal coordinates.
 %%
-maze(MAZELIST, START, GOAL, PATH) :-
-    isValidStartField(MAZELIST, START),
-    isValidGoalField(MAZELIST, GOAL),
-    check(MAZELIST, START, GOAL, [START], PATH),
-    write('PATH: '),
-    write(PATH),nl.
+maze(MazeList, Start, Goal, Path) :-
+    isValidStartField(MazeList, Start),
+    isValidGoalField(MazeList, Goal),
+    check(MazeList, Start, Goal, [Start], Path),
+    write('Path: '),
+    write(Path),nl.
 
-%% Call: check(MAZELIST, START, GOAL, [START], PATH)
-%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              START: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
-%              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
-%              [START]: The visited list, that contains the already visited nodes of the maze, is initialized with the start position.
-%              PATH: A list that contains a valid path, in form of coordinates, through the maze.
+%% Call: check(MazeList, Start, Goal, [Start], Path)
+%              MazeList: A list containing the maze. See examples on the bottom for the format.
+%              Start: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
+%              Goal: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
+%              [Start]: The visited list, that contains the already visited nodes of the maze, is initialized with the start position.
+%              Path: A list that contains a valid path, in form of coordinates, through the maze.
 %
 %   Finds a path through the maze by checking whether the current coordinate is the goal.
 %   If not it starts looking to the right-hand coordinate, then bottom, left-hand and finally the top coordinate.
@@ -30,147 +30,147 @@ maze(MAZELIST, START, GOAL, PATH) :-
 %%               
 
 % Check current position for the goal
-check(MAZELIST, (CURROW, CURCOLUMN), (GOAL1, GOAL2), VISITED, PATH) :-
-    CURROW =:= GOAL1,
-    CURCOLUMN =:= GOAL2,
-    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
-    reverse(VISITED, PATH).
+check(MazeList, (CurRow, CurColumn), (Goal1, Goal2), Visited, Path) :-
+    CurRow =:= Goal1,
+    CurColumn =:= Goal2,
+    isValidField(MazeList, (CurRow, CurColumn)),
+    reverse(Visited, Path).
 
 
 % check east unvisited
-check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
-    CURCOLUMNI is CURCOLUMN + 1,
-    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
-    isNotVisited((CURROW, CURCOLUMNI), VISITED),
-    move(MAZELIST, (CURROW, CURCOLUMNI), GOAL, VISITED, PATH).
+check(MazeList, (CurRow, CurColumn), Goal, Visited, Path) :-
+    CurColumnI is CurColumn + 1,
+    isValidField(MazeList, (CurRow, CurColumn)),
+    isNotVisited((CurRow, CurColumnI), Visited),
+    move(MazeList, (CurRow, CurColumnI), Goal, Visited, Path).
 
 
 % check south unvisited
-check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH):-
-    CURROWI is CURROW + 1,
-    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
-    isNotVisited((CURROWI,CURCOLUMN), VISITED),
-    move(MAZELIST, (CURROWI, CURCOLUMN), GOAL, VISITED, PATH).
+check(MazeList, (CurRow, CurColumn), Goal, Visited, Path):-
+    CurRowI is CurRow + 1,
+    isValidField(MazeList, (CurRow, CurColumn)),
+    isNotVisited((CurRowI,CurColumn), Visited),
+    move(MazeList, (CurRowI, CurColumn), Goal, Visited, Path).
 
 
 
 % check west unvisited
-check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
-    CURCOLUMNI is CURCOLUMN - 1,
-    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
-    isNotVisited((CURROW,CURCOLUMNI),VISITED),
-    move(MAZELIST, (CURROW,CURCOLUMNI), GOAL, VISITED, PATH).
+check(MazeList, (CurRow, CurColumn), Goal, Visited, Path) :-
+    CurColumnI is CurColumn - 1,
+    isValidField(MazeList, (CurRow, CurColumn)),
+    isNotVisited((CurRow,CurColumnI),Visited),
+    move(MazeList, (CurRow,CurColumnI), Goal, Visited, Path).
 
 
 % check north unvisited
-check(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
-    CURROWI is CURROW - 1,
-    isValidField(MAZELIST, (CURROW, CURCOLUMN)),
-    isNotVisited((CURROWI,CURCOLUMN), VISITED),
-    move(MAZELIST, (CURROWI, CURCOLUMN), GOAL, VISITED, PATH).
+check(MazeList, (CurRow, CurColumn), Goal, Visited, Path) :-
+    CurRowI is CurRow - 1,
+    isValidField(MazeList, (CurRow, CurColumn)),
+    isNotVisited((CurRowI,CurColumn), Visited),
+    move(MazeList, (CurRowI, CurColumn), Goal, Visited, Path).
 
 
-%% Call: move(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH)
-%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              CURROW: Y-coordinate of the current position.
-%              CURCOLUMN: X-coordinate of the current position.
-%              GOAL: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
-%              VISITED: The visited list, that contains the already visited nodes of the maze.
-%              PATH: A list that contains the path which was taken to reach the current possition
+%% Call: move(MazeList, (CurRow, CurColumn), Goal, Visited, Path)
+%              MazeList: A list containing the maze. See examples on the bottom for the format.
+%              CurRow: Y-coordinate of the current position.
+%              CurColumn: X-coordinate of the current position.
+%              Goal: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
+%              Visited: The visited list, that contains the already visited nodes of the maze.
+%              Path: A list that contains the path which was taken to reach the current possition
 %
 %   move performs the actual move to a new field of the maze.
 %   It appends the coordinates of the new field to the visited list.
-move(MAZELIST, (CURROW, CURCOLUMN), GOAL, VISITED, PATH) :-
-    check(MAZELIST, (CURROW, CURCOLUMN), GOAL, [(CURROW, CURCOLUMN)|VISITED], PATH).
+move(MazeList, (CurRow, CurColumn), Goal, Visited, Path) :-
+    check(MazeList, (CurRow, CurColumn), Goal, [(CurRow, CurColumn)|Visited], Path).
 
-%% Call: isNotVisited((ROW, COLUMN), VISITED)
-%               ROW: The Y-coordinate of the tested field.
-%               COLUMN: The X-coordinate of the tested field.
-%               VISITED: The list that contains all already visited positions in the maze.
+%% Call: isNotVisited((Row, Column), Visited)
+%               Row: The Y-coordinate of the tested field.
+%               Column: The X-coordinate of the tested field.
+%               Visited: The list that contains all already visited positions in the maze.
 %
 %   Tests if the given coordinate is already in the visited list.
 %   Actually works like the negated swi prolog build-in member/2 function. (But we didn't know it before)
 %
 %   Is TRUE if the field was not visited, yet.
 %%
-isNotVisited((ROW, COLUMN), VISITED) :-
-    \+isVisited(ROW, COLUMN, VISITED).
+isNotVisited((Row, Column), Visited) :-
+    \+isVisited(Row, Column, Visited).
 
 isVisited(_, _, []) :-
     false.
 
-isVisited(ROW, COLUMN, [(X,Y)|_]) :-
-    ROW =:= X,
-    COLUMN =:= Y.
+isVisited(Row, Column, [(X,Y)|_]) :-
+    Row =:= X,
+    Column =:= Y.
 
-isVisited(ROW, COLUMN, [_|VISITED]) :-
-    isVisited(ROW, COLUMN, VISITED).
+isVisited(Row, Column, [_|Visited]) :-
+    isVisited(Row, Column, Visited).
 
 
-%% Call: isValidField(MAZELIST, COORDINATE)
-%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              COORDINATE: A tupel containing the coordinates which will be checked.
+%% Call: isValidField(MazeList, Coordinate)
+%              MazeList: A list containing the maze. See examples on the bottom for the format.
+%              Coordinate: A tupel containing the coordinates which will be checked.
 %
 %   Is TRUE if the field is a valid (walkable) position in the maze.
 %%
-isValidField(MAZE, COORDINATE) :-
-    getValue(MAZE, COORDINATE, VALUE),
-    VALUE =:= 0.
+isValidField(Maze, Coordinate) :-
+    getValue(Maze, Coordinate, Value),
+    Value =:= 0.
 
-isValidStartField(MAZE, (ROW, COLUMN)) :-
-    isValidField(MAZE, (ROW, COLUMN)).
+isValidStartField(Maze, (Row, Column)) :-
+    isValidField(Maze, (Row, Column)).
 
-isValidStartField(_, (ROW, COLUMN)) :-
+isValidStartField(_, (Row, Column)) :-
     write('Start ('),
-    write(ROW),
+    write(Row),
     write(','),
-    write(COLUMN),
+    write(Column),
     write(') is not walkable.'),nl,
     false.
 
-isValidGoalField(MAZE, (ROW, COLUMN)) :-
-    isValidField(MAZE, (ROW, COLUMN)).
+isValidGoalField(Maze, (Row, Column)) :-
+    isValidField(Maze, (Row, Column)).
 
-isValidGoalField(_, (ROW, COLUMN)) :-
+isValidGoalField(_, (Row, Column)) :-
     write('Goal ('),
-    write(ROW),
+    write(Row),
     write(','),
-    write(COLUMN),
+    write(Column),
     write(') is not walkable.'),nl,
     false.
 
-%% Call: getValue(MAZELIST, COORDINATE, VALUE)
-%              MAZELIST: A list containing the maze. See examples on the bottom for the format.
-%              COORDINATE: A tupel containing the coordinates which will be checked.
-%              VALUE: The value of the maze's field with coordinates given by COORDINATE.
+%% Call: getValue(MazeList, Coordinate, Value)
+%              MazeList: A list containing the maze. See examples on the bottom for the format.
+%              Coordinate: A tupel containing the coordinates which will be checked.
+%              Value: The value of the maze's field with coordinates given by Coordinate.
 %
 %   Gets the value of a given field in the maze.
 %%
-getValue(MAZELIST, COORDINATE, VALUE) :-
-    inRow(MAZELIST, 1, 1, COORDINATE, VALUE).
+getValue(MazeList, Coordinate, Value) :-
+    inRow(MazeList, 1, 1, Coordinate, Value).
 
-inRow([ROW|_], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
-    CURROW =:= GOALROW,
-    inColumn(ROW, CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE).
+inRow([Row|_], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
+    CurRow =:= GoalRow,
+    inColumn(Row, CurRow, CurColumn, (GoalRow, GoalColumn), Value).
 
-inRow([_|RESTMAZE], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
-    CURROW < GOALROW,
-    CURROWI is CURROW+1,
-    inRow(RESTMAZE, CURROWI, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE).
+inRow([_|RestMaze], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
+    CurRow < GoalRow,
+    CurRowI is CurRow+1,
+    inRow(RestMaze, CurRowI, CurColumn, (GoalRow, GoalColumn), Value).
 
-inColumn([ELEMENT|_], _, CURCOLUMN, (_, GOALCOLUMN), ELEMENT) :- 
-    CURCOLUMN =:= GOALCOLUMN.
+inColumn([Element|_], _, CurColumn, (_, GoalColumn), Element) :- 
+    CurColumn =:= GoalColumn.
 
-inColumn([_|RESTLIST], CURROW, CURCOLUMN, (GOALROW, GOALCOLUMN), VALUE) :-
-    CURCOLUMN < GOALCOLUMN,
-    CURCOLUMNI is CURCOLUMN+1,
-    inColumn(RESTLIST, CURROW, CURCOLUMNI, (GOALROW, GOALCOLUMN), VALUE).
+inColumn([_|RestList], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
+    CurColumn < GoalColumn,
+    CurColumnI is CurColumn+1,
+    inColumn(RestList, CurRow, CurColumnI, (GoalRow, GoalColumn), Value).
 
 
 %% Here you can find some examples for the maze solving algorithm.
 %  To use them append them to your maze/4 function call.
 %  This can look like: 
-%            ex1(MAZE),maze(MAZE,(2,1), (6,6), PATH).
+%            ex1(Maze),maze(Maze,(2,1), (6,6), Path).
 
 
 
