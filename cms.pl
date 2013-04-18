@@ -1,6 +1,5 @@
 %% maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
-% example usage:
-%   ?- 
+% To get some example querries check the bottom of this file in the Examples section.
 
 
 %% Call: maze(+MazeList, +Start, +Goal, -ShortestPath)
@@ -224,18 +223,18 @@ inColumn([_|RestList], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
     inColumn(RestList, CurRow, CurColumnI, (GoalRow, GoalColumn), Value).
 
 
+%%
+%       E X A M P L E S
+%%
+
 %% Here you can find some examples for the maze solving algorithm.
 %  To use them append them to your maze/4 function call.
 %  This can look like: 
 %            ex1(Maze),maze(Maze,(2,1), (6,6), Path).
 
-
-%% Size: 6 x 6
-%
-% Possible Start/Goal scenarios:
-%   S(1,6) - G(6,2)
-%   S(2,1) - G(6,6)
-%%
+%% Example query ex1:
+%  ex1(Maze),maze(Maze,(1,6),(6,2),X).
+%  ex1(Maze),maze(Maze,(2,5),(4,4),X).
 ex1([
 [1,1,1,1,1,0],
 [0,0,0,0,0,0],
@@ -244,6 +243,9 @@ ex1([
 [1,1,0,0,0,0],
 [1,0,0,0,1,0]]).
 
+%% Example query ex2:
+%  ex2(Maze),maze(Maze,(2,4),(4,4),X).
+%  ex2(Maze),maze(Maze,(5,6),(2,1),X).
 ex2([
 [1,1,1,1,1,0],
 [0,0,0,0,0,0],
@@ -252,6 +254,9 @@ ex2([
 [1,1,0,0,0,0],
 [1,0,0,0,0,0]]).
 
+%% Example query ex3:
+%  ex3(Maze),maze(Maze,(2,3),(5,5),X).
+%  ex3(Maze),maze(Maze,(6,2),(3,1),X).
 ex3([
 [1,1,1,1,0,1],
 [0,0,0,1,0,0],
@@ -260,7 +265,10 @@ ex3([
 [1,1,0,0,0,0],
 [1,0,0,0,0,0]]).
 
-ex5([
+%% Example query ex4:
+%  ex4(Maze),maze(Maze,(1,1),(5,8),X).
+%  ex4(Maze),maze(Maze,(13,1),(3,9),X).
+ex4([
 [0,0,1,1,1,0,0,0,0,0,0,0,1],
 [1,0,1,1,1,0,1,1,0,1,1,0,1],
 [1,0,0,0,0,0,1,1,0,1,1,0,1],
