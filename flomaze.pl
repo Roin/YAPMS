@@ -1,14 +1,14 @@
 % maze solving algorithm by Florian Kanngießer (7353550) and Christian Burkard (4206853)
-
+% To get some example querries check the bottom of this file in the Examples section
 
 %% Call: maze(MazeList, Start, Goal, Path)
 %              MazeList: A list containing the maze. See examples on the bottom for the format.
 %              Start: A tupel containing the starting coordinates. Ex.: (1,1) for starting on the top left position.
 %              Goal: A tupel containing the coordinates to the exit of the maze. Ex.: (5,5).
-%              Path: A list containing the shortest path which solves the maze.
+%              Path: A list containing the path which solves the maze.
 %
 %   This is the "API" function. This function starts the maze solving algorithm.
-%   It finds the shortest path for a given maze, given some start and goal coordinates.
+%   It finds the path which solves the maze, given some start and goal coordinates.
 %%
 maze(MazeList, Start, Goal, Path) :-
     isValidStartField(MazeList, Start),!,
@@ -145,7 +145,12 @@ isValidGoalField(_, (Row, Column)) :-
     write(Column),
     write(') is not walkable.'),nl,
     false.
-
+%% Call: getDirections(+Path, -Directions)
+%              Path: A list containing the path which solves the maze.
+%              Directions: A List that contains the walking directions which solve a maze
+%
+%   Determines the directions to a given Path.
+%%
 getDirections([(FirstY, FirstX), (SecondY, SecondX)|[]], [Add]) :-
     (FirstY > SecondY,
         Add= 'north');
@@ -194,6 +199,9 @@ inColumn([_|RestList], CurRow, CurColumn, (GoalRow, GoalColumn), Value) :-
     CurColumnI is CurColumn+1,
     inColumn(RestList, CurRow, CurColumnI, (GoalRow, GoalColumn), Value).
 
+%%
+%       E X A M P L E S
+%%
 
 %% Here you can find some examples for the maze solving algorithm.
 %  To use them append them to your maze/4 function call.
